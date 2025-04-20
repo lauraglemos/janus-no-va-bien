@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Revisar Grabaciones{% endblock %}
+
+{% block content %}
+<h2>Revisar Grabaciones</h2>
+<div class="row">
+    {% for recording in recordings %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ recording.student.username }}</h5>
+                <p>Examen: {{ recording.exam.subject }}</p>
+                <a href="{{ recording.video_url }}" class="btn btn-primary" target="_blank">Ver Grabación</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

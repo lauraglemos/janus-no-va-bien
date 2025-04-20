@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">Selecciona un Examen</h2>
+        <a href="{% url 'manage_exams' %}" class="btn btn-primary">Gestionar Exámenes</a>
+    </div>
+
+    <div class="list-group">
+        {% for exam in exams %}
+            <a href="{% url 'dashboard_exam' exam.id %}" class="list-group-item list-group-item-action">
+                {{ exam.subject }} - {{ exam.date }}
+            </a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

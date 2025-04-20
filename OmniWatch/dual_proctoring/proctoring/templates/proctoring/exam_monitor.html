@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Monitoreo de Exámenes</title>
+  <link rel="stylesheet" href="{% static 'exam_monitor/css/styles.css' %}">
+</head>
+<body>
+  <!-- Formulario oculto con valores pre-completados -->
+  <div id="login" class="login-area">
+    <input type="hidden" id="username" value="{{ user.username }}">
+    <input type="hidden" id="role" value="{% if is_teacher %}teacher{% else %}student{% endif %}">
+    <input type="hidden" id="roomId" value="{{ exam_id }}">
+  </div>
+
+  <!-- Contenedor principal de la aplicación -->
+  <div id="mainApp" class="container hidden">
+    <h1 id="headerText">Monitoreo de Examen: {{ exam.subject }}</h1>
+
+    <!-- Controles de la aplicación -->
+     
+     <div class="controls">
+      <button id="startBtn" style="display:none;">Iniciar Cámara</button>
+      <button id="publishBtn" disabled style="display:none;">Publicar Video</button> 
+      <button id="leaveBtn">Salir</button>
+    </div>
+
+    <!-- Contenedor para la webcam (video local) -->
+    <!-- <div id="localVideo" class="video-container hidden">
+      <video id="myVideo" autoplay muted playsinline></video>
+      <div class="student-info" id="myInfo">Yo (No publicado)</div>
+    </div> -->
+
+    <!-- Botones y contenedor para la GoPro -->
+    <!-- Nota: Aunque en el JS se pueden crear controles dinámicamente, aquí se definen de forma explícita -->
+     <!-- <div id="goProVideoDiv">
+      <video id="goProVideoElement" autoplay muted playsinline></video>
+      <div id="goProInfo">GoPro (No conectada)</div>
+    </div>  -->
+
+    <!-- Estado de la conexión -->
+    <div class="status" id="status">Iniciando conexión...</div>
+
+    <!-- Contenedor para feeds remotos -->
+    <div id="videosGrid" class="videos-grid"></div>
+
+    <!-- Información de depuración -->
+    <div id="debugInfo" class="debug-info">
+      <div>Estado de conexión: <span id="connectionState">Conectando...</span></div>
+      <div>Feeds remotos detectados: <span id="feedsCount">0</span></div>
+    </div>
+    
+    <!-- Div adicional para controles de dispositivos (se crea dinámicamente si se necesita) -->
+    <div id="deviceControls" class="hidden"></div>
+  </div>
+
+  {% csrf_token %}
+  <!-- Variables globales para el JS -->
+  <script>
+  const RAW_ROLE = document.getElementById('role').value;
+    const JANUS_SERVER = "{{ janus_server }}";
+    const USER_NAME = "{{ user.username }}";
+    const USER_ROLE = "{% if is_teacher %}teacher{% else %}student{% endif %}";
+    const EXAM_ID = "{{ exam_id }}";
+    
+  console.log("💡 DEBUG: RAW_ROLE='%s' ⇒ USER_ROLE='%s'", RAW_ROLE, USER_ROLE);
+
+  // Inicia automáticamente la conexión cuando se cargue el DOM
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(function() {
+        initializeExamMonitor(USER_NAME, USER_ROLE, EXAM_ID);
+      }, 500);
+    });
+  </script>
+  <!-- Cargar librerías adicionales -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="{% static 'exam_monitor/adapter.min.js' %}"></script>
+  <script src="{% static 'exam_monitor/js/janus.js' %}"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script> -->
+  <!-- Se carga el JS actualizado con integración de GoPro -->
+  <script src="{% static 'exam_monitor/js/exam_monitor.js' %}"></script>
+</body>
+</html>

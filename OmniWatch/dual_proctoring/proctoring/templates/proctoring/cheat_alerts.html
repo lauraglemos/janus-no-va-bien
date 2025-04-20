@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Alertas de Trampas{% endblock %}
+
+{% block content %}
+<h2>Alertas de Trampas</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th>Estudiante</th>
+            <th>Examen</th>
+            <th>Tipo de Alerta</th>
+            <th>Hora</th>
+            <th>Detalles</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for alert in alerts %}
+        <tr>
+            <td>{{ alert.student.username }}</td>
+            <td>{{ alert.exam.subject }}</td>
+            <td>{{ alert.alert_type }}</td>
+            <td>{{ alert.timestamp }}</td>
+            <td>{{ alert.details }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

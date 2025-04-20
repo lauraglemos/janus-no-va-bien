@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Crear Examen{% endblock %}
+
+{% block content %}
+<h2>Crear Nuevo Examen</h2>
+<form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+        <label class="form-label">Asignatura</label>
+        {{ form.subject }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Fecha</label>
+        {{ form.date }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Hora</label>
+        {{ form.time }}
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Contraseña</label>
+        {{ form.password }}
+    </div>
+    <button type="submit" class="btn btn-success">Guardar Examen</button>
+</form>
+{% endblock %}

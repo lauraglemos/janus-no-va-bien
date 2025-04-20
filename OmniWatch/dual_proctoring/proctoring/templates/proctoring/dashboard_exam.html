@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">Opciones para el Examen: {{ exam.subject }}</h2>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Pantallas en Directo</h5>
+                    <p class="card-text">Visualiza las cámaras de los alumnos en tiempo real.</p>
+                    <a href="{% url 'exam_monitor' exam_id=exam.id %}" class="btn btn-primary">Ver Ahora</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Revisar Grabaciones</h5>
+                    <p class="card-text">Revisa las grabaciones de exámenes anteriores.</p>
+                    <a href="{% url 'exam_recordings' exam_id=exam.id %}" class="btn btn-secondary">Ver Ahora</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Alertas de Trampas</h5>
+                    <p class="card-text">Detecta posibles trampas durante los exámenes.</p>
+                    <a href="{% url 'cheat_alerts' exam_id=exam.id %}" class="btn btn-danger">Ver Ahora</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

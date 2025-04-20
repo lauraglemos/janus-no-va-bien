@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}Pantallas en Directo{% endblock %}
+
+{% block content %}
+<h2>Pantallas en Directo</h2>
+<div class="row">
+    {% for stream in streams %}
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ stream.student.username }}</h5>
+                <p>Examen: {{ stream.exam.subject }}</p>
+                <a href="{{ stream.stream_url }}" class="btn btn-success" target="_blank">Ver Streaming</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

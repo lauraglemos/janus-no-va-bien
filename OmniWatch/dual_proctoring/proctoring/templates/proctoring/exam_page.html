@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Examen: {{ exam.subject }}</title>
+    <link rel="stylesheet" href="{% static 'exam_monitor/css/styles.css' %}">
+
+</head>
+<body>
+  <!-- Formulario oculto con los valores pre-completados -->
+  <div id="login" class="login-area hidden">
+      <input type="hidden" id="username" value="{{ user.username }}">
+      <input type="hidden" id="role" value="student">
+      <input type="hidden" id="roomId" value="{{ exam_id }}">
+  </div>
+
+  <div id="mainApp" class="container">
+      <!-- Se agrega un encabezado adicional para que headerText exista -->
+      <div id="headerText" style="display:none;"></div>
+      
+      <div class="exam-header">
+          <h1>{{ exam.subject }}</h1>
+          <div class="exam-info">
+              <span>Fecha: {{ exam.date }}</span>
+              <span>Hora: {{ exam.time }}</span>
+          </div>
+      </div>
+      
+      <div class="controls"> 
+          <!-- Se cambió el id de startButton a startBtn -->
+           <button id="startBtn" style="display:none;">Iniciar Cámara</button>
+          <button id="publishBtn" style="display:none;">Publicar Video</button> 
+          <!-- Se añade botón para salir, requerido por el JS -->
+         <button id="leaveBtn" style="display:none;">Abandonar</button>
+          <div class="status" id="status">Para continuar, debes activar tu cámara</div>
+      </div> 
+      
+      <div class="exam-content">
+          <h2>Instrucciones del Examen</h2>
+          <p>Por favor, activa tu cámara y mantente visible durante toda la duración del examen.</p>
+          <p>No está permitido usar materiales adicionales ni consultar otras fuentes.</p>
+          
+          <!-- Aquí puedes incluir el contenido del examen -->
+          <div id="examQuestions">
+              <h3>Preguntas</h3>
+              <!-- Aquí podrías cargar dinámicamente las preguntas del examen -->
+              <form id="examForm">
+                  <div class="question">
+                      <p>1. [Pregunta del examen]</p>
+                      <textarea name="answer1" rows="4" cols="50" placeholder="Tu respuesta aquí..."></textarea>
+                  </div>
+                  
+                  <div class="question">
+                      <p>2. [Pregunta del examen]</p>
+                      <textarea name="answer2" rows="4" cols="50" placeholder="Tu respuesta aquí..."></textarea>
+                  </div>
+                  
+                  <!-- Más preguntas aquí -->
+                  
+                  <button type="submit" id="submitExam" disabled>Entregar Examen</button>
+              </form>
+          </div>
+      </div>
+      
+      <div id="localVideo" class="video-container">
+          <!-- Se cambió el id del elemento de video a "myVideo" para coincidir con el JS -->
+          <video id="myVideo" autoplay muted playsinline></video>
+          <div class="student-info" id="myInfo">No publicado</div>
+      </div>
+
+      <div id="goProVideoDiv">
+        <div class="video-container">
+          <video id="goProVideo" autoplay muted playsinline></video>
+          <div class="student-info" id="goProInfo">GoPro</div>
+        </div>
+    </div>
+
+      <div id="videosGrid" class="videos-grid"></div>
+
+      
+      <div id="debugInfo" class="debug-info">
+        <div>Estado de conexión: <span id="connectionState">Conectando...</span></div>
+        <div>Feeds detectados: <span id="feedsCount">0</span></div>
+    </div>
+  </div>
+
+  {% csrf_token %}
+  <script>
+    // Variables disponibles para JavaScript
+    const JANUS_SERVER = "{{ janus_server }}";
+    const USER_NAME = "{{ user.username }}";
+    const USER_ROLE = "{% if is_teacher %}teacher{% else %}student{% endif %}";
+    const EXAM_ID = "{{ exam_id }}";
+    
+    // Auto-iniciar el proceso de conexión cuando la página cargue
+    document.addEventListener('DOMContentLoaded', function() {
+    // Make sure all DOM elements are available first
+    if (document.getElementById('videosGrid') && 
+        document.getElementById('connectionState') && 
+        document.getElementById('feedsCount')) {
+        
+        setTimeout(function() {
+            initializeExamMonitor(USER_NAME, USER_ROLE, EXAM_ID);
+        }, 500);
+    } else {
+        console.error("Required DOM elements not found!");
+    }
+});
+</script>
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script type="text/javascript" src="{% static 'exam_monitor/adapter.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'exam_monitor/js/janus.js' %}"></script>
+  <script type="text/javascript" src="{% static 'exam_monitor/js/exam_monitor.js' %}"></script>
+</body>
+</html>
